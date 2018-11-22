@@ -24,7 +24,7 @@ use trust_dns::tcp::TcpClientStream;
 use trust_dns::udp::UdpClientStream;
 
 use trust_dns_proto::xfer::DnsMultiplexerSerialResponse;
-use trust_dns_server::authority::Catalog;
+use trust_dns_server::authority::{Authority, Catalog};
 
 use trust_dns_integration::authority::create_secure_example;
 use trust_dns_integration::TestClientStream;
@@ -234,7 +234,7 @@ where
     };
 
     let mut catalog = Catalog::new();
-    catalog.upsert(authority.origin().clone(), authority);
+    catalog.upsert(authority.origin().clone(), Box::new(authority));
 
     let mut io_loop = Runtime::new().unwrap();
     let (stream, sender) = TestClientStream::new(Arc::new(Mutex::new(catalog)));
